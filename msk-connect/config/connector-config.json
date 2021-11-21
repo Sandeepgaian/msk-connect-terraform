@@ -7,22 +7,30 @@
         "mongodb.user": "test",
         "mongodb.name": "poc",
         "mongodb.hosts": "172.31.1.22:27017",
-        "data.include.list": "test"
+        "database.include.list": "poc",
+        "collection.include.list" : ""
     },
-    "connectorName": "testing",
+    "connectorName": "mongo-db-cdc-test",
     "kafkaCluster": {
         "apacheKafkaCluster": {
             "bootstrapServers": "b-2.kafka-cluster-connect.t3rwaj.c4.kafka.ap-south-1.amazonaws.com:9092,b-1.kafka-cluster-connect.t3rwaj.c4.kafka.ap-south-1.amazonaws.com:9092,b-3.kafka-cluster-connect.t3rwaj.c4.kafka.ap-south-1.amazonaws.com:9092",
             "vpc": {
-                "subnets": ["subnet-6484a42e", "subnet-8ef81ee7", "subnet-53b77528"],
+                "subnets": ["subnet-6484a42e","subnet-8ef81ee7","subnet-53b77528"],
                 "securityGroups": ["sg-0ac650662bad73b68"]
             }
         }
     },
     "capacity": {
-        "provisionedCapacity": {
-            "mcuCount": 2,
-            "workerCount": 4
+        "autoScaling": {
+            "maxWorkerCount": 2,
+            "mcuCount": 1,
+            "minWorkerCount": 1,
+            "scaleInPolicy": {
+                "cpuUtilizationPercentage": 20
+            },
+            "scaleOutPolicy": {
+                "cpuUtilizationPercentage": 80
+            }
         }
     },
     "kafkaConnectVersion": "2.7.1",

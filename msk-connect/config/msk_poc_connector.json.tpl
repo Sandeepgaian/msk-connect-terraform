@@ -1,28 +1,36 @@
 {
     "connectorConfiguration": {
         "connector.class": "io.debezium.connector.mongodb.MongoDbConnector",
-        "mongodb.password": "test",
+        "mongodb.password": "${mongodb_password}",
         "connect.max.attempts": "3",
-        "tasks.max": "10",
-        "mongodb.user": "test",
+        "tasks.max": "${number_of_tasks}",
+        "mongodb.user": "${mongodb_username}",
         "mongodb.name": "poc",
         "mongodb.hosts": "172.31.1.22:27017",
-        "data.include.list": "test"
+        "database.include.list": "${database_include_list}",
+        "collection.include.list" : "${collection_include_list}"
     },
     "connectorName": "${kafka_connector_name}",
     "kafkaCluster": {
         "apacheKafkaCluster": {
             "bootstrapServers": "${bootstrap_servers}",
             "vpc": {
-                "subnets": ["subnet-6484a42e", "subnet-8ef81ee7", "subnet-53b77528"],
-                "securityGroups": ["sg-0ac650662bad73b68"]
+                "subnets": ${subnet_ids},
+                "securityGroups": ${security_groups}
             }
         }
     },
     "capacity": {
-        "provisionedCapacity": {
-            "mcuCount": 2,
-            "workerCount": 4
+        "autoScaling": {
+            "maxWorkerCount": ${max_worker_count},
+            "mcuCount": 1,
+            "minWorkerCount": ${min_worker_count},
+            "scaleInPolicy": {
+                "cpuUtilizationPercentage": 20
+            },
+            "scaleOutPolicy": {
+                "cpuUtilizationPercentage": 80
+            }
         }
     },
     "kafkaConnectVersion": "2.7.1",
